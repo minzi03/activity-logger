@@ -1,45 +1,41 @@
-const fs = require("fs");
-const moment = require("moment");
-const random = require("random");
-const jsonfile = require("jsonfile");
-const simpleGit = require("simple-git");
+import jsonfile from "jsonfile";
+import moment from "moment";
+import simpleGit from "simple-git";
+import random from "random";
+const path = "./data.json";
 
-const git = simpleGit();
+const isValidDate = (date) => {
+  const startDate = moment("2019-01-01");
+  const endDate = moment("2024-12-13");
+  return date.isBetween(startDate, endDate, null, "[]");
+};
 
-// Tạo commit giả
-async function fakeCommit() {
-  const filePath = "./data.json";
+const markCommit = async (date) => {
+  const data = { date: date.toISOString() };
+  await jsonfile.writeFile(path, data);
+  const git = simpleGit();
+  await git.add([path]);
+  await git.commit(date.toISOString(), { "--date": date.toISOString() });
+};
 
-  // Đọc dữ liệu hiện tại từ data.json
-  let data = {};
-  if (fs.existsSync(filePath)) {
-    data = jsonfile.readFileSync(filePath);
+const makeCommits = async (n) => {
+  const git = simpleGit();
+  for (let i = 0; i < n; i++) {
+    const randomWeeks = random.int(0, 54 * 4); // Random weeks between 0 and 216
+    const randomDays = random.int(0, 6); // Random days between 0 and 6
+    const randomDate = moment("2019-01-01")
+      .add(randomWeeks, "weeks")
+      .add(randomDays, "days");
+
+    if (isValidDate(randomDate)) {
+      console.log(`Creating commit: ${randomDate.toISOString()}`);
+      await markCommit(randomDate);
+    } else {
+      console.log(`Invalid date: ${randomDate.toISOString()}, skipping...`);
+    }
   }
+  console.log("Pushing all commits...");
+  await git.push();
+};
 
-  // Thêm thời gian và dữ liệu ngẫu nhiên vào data
-  const newData = {
-    time: moment().format(),
-    randomValue: random.int(0, 100),
-  };
-
-  // Cập nhật tệp data.json
-  data = { ...data, ...newData };
-  jsonfile.writeFileSync(filePath, data, { spaces: 2 });
-
-  // Đảm bảo git đã được khởi tạo
-  await git.init();
-
-  // Stage các thay đổi
-  await git.add(filePath);
-
-  // Commit giả
-  await git.commit(`Fake commit at ${moment().format()}`);
-
-  // Kiểm tra xem có thay đổi chưa
-  const status = await git.status();
-  console.log(status);
-
-  console.log("Fake commit đã được tạo.");
-}
-
-fakeCommit();
+makeCommits(50000);
