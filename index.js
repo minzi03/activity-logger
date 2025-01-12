@@ -6,8 +6,8 @@ const path = "./data.json";
 
 // Kiểm tra ngày hợp lệ
 const isValidDate = (date) => {
-  const startDate = moment("2019-01-01");
-  const endDate = moment("2024-12-17");
+  const startDate = moment("2020-02-02");
+  const endDate = moment("2024-11-18");
   return date.isBetween(startDate, endDate, null, "[]");
 };
 
@@ -48,4 +48,4 @@ const makeCommits = async (n) => {
 };
 
 // Chạy tạo 50,000 commit
-makeCommits(600);
+makeCommits(400);
