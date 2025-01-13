@@ -4,14 +4,14 @@ import simpleGit from "simple-git";
 import random from "random";
 const path = "./data.json";
 
-// Kiểm tra ngày hợp lệ
+// Hàm kiểm tra ngày có hợp lệ không
 const isValidDate = (date) => {
-  const startDate = moment("2029-03-02");
-  const endDate = moment("2023-6-19");
+  const startDate = moment("2019-03-03");
+  const endDate = moment("2023-7-20");
   return date.isBetween(startDate, endDate, null, "[]");
 };
 
-// Hàm để tạo commit với một ngày cụ thể
+// Hàm tạo commit với ngày cụ thể
 const markCommit = async (date) => {
   const data = { date: date.toISOString() };
   await jsonfile.writeFile(path, data); // Ghi ngày vào file data.json
@@ -22,7 +22,7 @@ const markCommit = async (date) => {
   }); // Tạo commit mới
 };
 
-// Hàm tạo nhiều commit ngẫu nhiên
+// Hàm tạo n commit
 const makeCommits = async (n) => {
   const git = simpleGit();
   for (let i = 0; i < n; i++) {
@@ -42,10 +42,10 @@ const makeCommits = async (n) => {
     }
   }
 
-  // Đẩy tất cả các commit lên GitHub
+  // Push tất cả commit lên remote repository
   console.log("Pushing all commits...");
   await git.push();
 };
 
-// Chạy tạo 50,000 commit
+// Gọi hàm tạo commit
 makeCommits(400);
