@@ -6,8 +6,8 @@ const path = "./data.json";
 
 // Hàm kiểm tra ngày có hợp lệ không
 const isValidDate = (date) => {
-  const startDate = moment("2019-03-03");
-  const endDate = moment("2023-7-20");
+  const startDate = moment("2020-04-16");
+  const endDate = moment("2022-7-21");
   return date.isBetween(startDate, endDate, null, "[]");
 };
 
