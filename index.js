@@ -7,7 +7,7 @@ const path = "./data.json";
 // Hàm kiểm tra ngày có hợp lệ không
 const isValidDate = (date) => {
   const startDate = moment("2021-06-20");
-  const endDate = moment("3-8-22");
+  const endDate = moment("2023-04-25");
   return date.isBetween(startDate, endDate, null, "[]");
 };
 
@@ -48,4 +48,4 @@ const makeCommits = async (n) => {
 };
 
 // Gọi hàm tạo commit
-makeCommits(600);
+makeCommits(200);
